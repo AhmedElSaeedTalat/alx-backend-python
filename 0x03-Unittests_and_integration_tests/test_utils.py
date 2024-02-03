@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """ module to test access nested map"""
 import unittest
-from utils import access_nested_map, get_json
+from utils import access_nested_map, get_json, memoize
 from parameterized import parameterized
 from unittest.mock import patch, Mock
 from typing import (
@@ -52,3 +52,23 @@ class TestGetJson(unittest.TestCase):
         mockObj.return_value = mockResponse
         res = get_json(test_url)
         self.assertEqual(res, expected_response)
+
+
+class TestMemoize(unittest.TestCase):
+    """ to test memoize """
+    def test_memoize(self):
+        """ test momoize decorator """
+        class TestClass:
+            """ inside test class """
+            def a_method(self):
+                return 42
+
+            @memoize
+            def a_property(self):
+                """ wrapper method """
+                return self.a_method()
+        with patch.object(TestClass, 'a_method') as patchObj:
+            cls = TestClass()
+            cls.a_property()
+            cls.a_property()
+            patchObj.assert_called_once()
