@@ -8,14 +8,13 @@ from client import GithubOrgClient
 
 class TestGithubOrgClient(unittest.TestCase):
     """ class to test access nested map"""
-
     @parameterized.expand([
         ('google',),
         ('abc',)
         ])
     @patch('client.get_json')
     def test_org(self, url: str, mockObj: Mock):
-        """ test org method """
+        """ test org method to check if get_json was called """
         cls = GithubOrgClient(url)
         cls.org()
         url_used = f'https://api.github.com/orgs/{url}'
