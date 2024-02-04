@@ -4,6 +4,7 @@ import unittest
 from parameterized import parameterized
 from unittest.mock import patch, Mock, PropertyMock
 from client import GithubOrgClient
+from typing import Dict
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -43,3 +44,13 @@ class TestGithubOrgClient(unittest.TestCase):
             self.assertEqual(result_list, ["repo", "second_repo"])
             mock_getJson.assert_called_once()
             _reposMock.assert_called_once()
+
+    @parameterized.expand([
+        [{"license": {"key": "my_license"}}, "my_license", True],
+        [{"license": {"key": "other_license"}}, "my_license", False]
+        ])
+    def test_has_license(self, repo: Dict[str, Dict], license_key: str,
+                         expected_result: bool):
+        """ check if licence the same """
+        self.assertEqual(GithubOrgClient.has_license(repo, license_key),
+                         expected_result)
