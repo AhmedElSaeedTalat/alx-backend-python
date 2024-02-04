@@ -12,10 +12,10 @@ class TestGithubOrgClient(unittest.TestCase):
         ('google',),
         ('abc',)
         ])
-    def test_org(self, url: str):
+    @patch('client.get_json')
+    def test_org(self, url: str, mockObj):
         """ test org method """
-        with patch('client.get_json') as mockObj:
-            cls = GithubOrgClient(url)
-            cls.org()
-            url_used = f'https://api.github.com/orgs/{url}'
-            mockObj.assert_called_once_with(url_used)
+        cls = GithubOrgClient(url)
+        cls.org()
+        url_used = f'https://api.github.com/orgs/{url}'
+        mockObj.assert_called_once_with(url_used)
