@@ -35,11 +35,11 @@ class TestGithubOrgClient(unittest.TestCase):
         """ test public repos """
         target = 'client.GithubOrgClient._public_repos_url'
         with patch(target, new_callable=PropertyMock) as _reposMock:
-            _reposMock.return_value = 'repo'
-            payLoad = [{'name': 'repo'}, {'name': 'second_repo'}]
+            _reposMock.return_value = "repo"
+            payLoad = [{"name": "repo"}, {"name": "second_repo"}]
             mock_getJson.return_value = payLoad
-            Github = GithubOrgClient('repo')
+            Github = GithubOrgClient("repo")
             result_list = Github.public_repos()
-            self.assertEqual(result_list, ['repo', 'second_repo'])
+            self.assertEqual(result_list, ["repo", "second_repo"])
             mock_getJson.assert_called_once()
             _reposMock.assert_called_once()
