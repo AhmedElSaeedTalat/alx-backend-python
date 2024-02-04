@@ -8,6 +8,7 @@ from client import GithubOrgClient
 
 class TestGithubOrgClient(unittest.TestCase):
     """ class to test access nested map"""
+
     @parameterized.expand([
         ('google',),
         ('abc',)
