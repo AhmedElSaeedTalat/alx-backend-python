@@ -2,18 +2,18 @@
 """ module to test access nested map"""
 import unittest
 from parameterized import parameterized
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 from client import GithubOrgClient
 
 
 class TestGithubOrgClient(unittest.TestCase):
     """ class to test access nested map"""
     @parameterized.expand([
-        ('google'),
-        ('abc')
+        ('google',),
+        ('abc',)
         ])
     @patch('client.get_json')
-    def test_org(self, url: str, mockObj):
+    def test_org(self, url: str, mockObj: Mock):
         """ test org method """
         cls = GithubOrgClient(url)
         cls.org()
