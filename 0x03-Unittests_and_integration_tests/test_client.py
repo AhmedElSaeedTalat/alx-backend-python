@@ -2,7 +2,7 @@
 """ module to test access nested map"""
 import unittest
 from parameterized import parameterized
-from unittest.mock import patch, Mock
+from unittest.mock import patch, Mock, PropertyMock
 from client import GithubOrgClient
 
 
@@ -19,3 +19,13 @@ class TestGithubOrgClient(unittest.TestCase):
         cls.org()
         url_used = f'https://api.github.com/orgs/{url}'
         mockObj.assert_called_once_with(url_used)
+
+    def test_public_repos_url(self):
+        """ mock property from org as returned value """
+        target = 'client.GithubOrgClient.org'
+        with patch(target, new_callable=PropertyMock) as propMock:
+            value = {'repos_url': 'value'}
+            propMock.return_value = value
+            cls = GithubOrgClient(value['repos_url'])
+            result = cls._public_repos_url
+            self.assertEqual(result, value['repos_url'])
