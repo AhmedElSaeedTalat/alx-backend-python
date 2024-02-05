@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """ module to test access nested map"""
 import unittest
-from parameterized import parameterized
+from parameterized import parameterized, parameterized_class
 from unittest.mock import patch, Mock, PropertyMock
 from client import GithubOrgClient
+from fixtures import TEST_PAYLOAD
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -52,3 +53,28 @@ class TestGithubOrgClient(unittest.TestCase):
         """ check if licence the same """
         res = GithubOrgClient.has_license(repo, license_key)
         self.assertEqual(res, expected_result)
+
+
+@parameterized_class(('org_payload', 'repos_payload', 'expected_repos',
+                      'apache2_repos'), TEST_PAYLOAD)
+class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """ class for test integration Org """
+    @classmethod
+    def setUpClass(cls):
+        """ set up class """
+        list_payLoad = [cls.org_payload, cls.repos_payload]
+        vals = {'return_value.json.side_effect': list_payLoad}
+        cls.get_patcher = patch('requests.get', **vals)
+        cls.get_patcher.start()
+
+    def test_public_repos(self):
+        """ test public repos """
+        cls = GithubOrgClient('value')
+        self.assertEqual(cls.org, self.org_payload)
+        self.assertEqual(cls.repos_payload, self.repos_payload)
+        self.assertEqual(cls.public_repos(), self.expected_repos)
+
+    @classmethod
+    def tearDownClass(cls):
+        """ tear down method """
+        cls.get_patcher.stop()
